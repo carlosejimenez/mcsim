@@ -27,6 +27,9 @@ def eval_policy(policy, N, initial_price, M, price_params):
 def sharpe(array):
     mu = statistics.mean(array)
     sigma = statistics.stdev(array)
+    if sigma <= 0:
+        print("ERROR SHARPE CALL")
+        return 0
     return mu/sigma
 
 
@@ -42,10 +45,12 @@ if __name__ == '__main__':
     results = {}
 
     for param in params:
+        print(param)
         ratios = {}
         for i in range(0, 6, 2):
             for j in range(-10, 5, 5):
                 policy = {'high': i, 'low': j}
-                ratios[(i, j)] = eval_policy(policy, N=100, initial_price=0, M=10**6, price_params=param)
-        print(max(ratios, key=sharpe))
+                ratios[(i, j)] = sharpe(eval_policy(policy, N=100, initial_price=0, M=10**6, price_params=param))
+        max_key = max(ratios, key=ratios.get)
+        print(f'{max_key}: {ratios[max_key]}', end='\n\n')
 
