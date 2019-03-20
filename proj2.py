@@ -2,14 +2,10 @@ import numpy
 import statistics
 
 
-def get_price(phi, m, sigma, last_price):
-    epsilon = numpy.random.normal(0, 1)
-    return (1-phi) * m + phi * last_price + sigma * epsilon
-
-
 def eval_policy(policy, N, initial_price, M, price_params):
     final_pis = []
     for path in range(M):
+        print(f'\rpolicy {policy["high"], policy["low"]} - path {path+1}', end='')
         n = 0
         last_price = initial_price
         while True:
@@ -24,9 +20,14 @@ def eval_policy(policy, N, initial_price, M, price_params):
     return final_pis
 
 
+def get_price(phi, m, sigma, last_price):
+    epsilon = numpy.random.normal(0, 1)
+    return (1-phi) * m + phi * last_price + sigma * epsilon
+
+
 def sharpe(array):
-    mu = numpy.mean(array)
-    sigma = numpy.std(array)
+    mu = statistics.mean(array)
+    sigma = statistics.stdev(array)
     if sigma <= 0:
         print("ERROR SHARPE CALL")
         return 0
@@ -47,10 +48,10 @@ if __name__ == '__main__':
     for param in params:
         print(param)
         ratios = {}
-        for i in range(0, 6, 2):
-            for j in range(-10, 5, 5):
+        for i in range(0, 4 + 1, 2):
+            for j in range(-10, 0 + 1, 5):
                 policy = {'high': i, 'low': j}
                 ratios[(i, j)] = sharpe(eval_policy(policy, N=100, initial_price=0, M=10**6, price_params=param))
         max_key = max(ratios, key=ratios.get)
-        print(f'{max_key}: {ratios[max_key]}', end='\n\n')
+        print(f'\rpolicy{max_key}: {ratios[max_key]}', end='\n\n')
 
