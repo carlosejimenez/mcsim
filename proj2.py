@@ -25,8 +25,8 @@ def eval_policy(policy, N, initial_price, M, price_params):
 
 
 def sharpe(array):
-    mu = statistics.mean(array)
-    sigma = statistics.stdev(array)
+    mu = numpy.mean(array)
+    sigma = numpy.std(array)
     if sigma <= 0:
         print("ERROR SHARPE CALL")
         return 0
