@@ -3,6 +3,14 @@ import statistics
 
 
 def eval_policy(policy, N, initial_price, M, price_params):
+    """
+    :param policy: Policy is a dictionary type like {'high': 2, 'low: -2}
+    :param N: Integer for maximum iterations for each path
+    :param initial_price: float
+    :param M: number of paths to run
+    :param price_params: keyword dictionary like {'phi': 0.8, 'm'= 0, 'sigma'= 1}
+    :return: List of final returns. Of length M.
+    """
     final_pis = []
     for path in range(M):
         print(f'\rpolicy {policy["high"], policy["low"]} - path {path+1}', end='')
@@ -21,6 +29,14 @@ def eval_policy(policy, N, initial_price, M, price_params):
 
 
 def get_price(phi, m, sigma, last_price):
+    """
+    Mean reversion model with all the parameters
+    :param phi: float
+    :param m: integer
+    :param sigma: float
+    :param last_price: float
+    :return: float
+    """
     epsilon = numpy.random.normal(0, 1)
     return (1-phi) * m + phi * last_price + sigma * epsilon
 
@@ -28,9 +44,6 @@ def get_price(phi, m, sigma, last_price):
 def sharpe(array):
     mu = statistics.mean(array)
     sigma = statistics.stdev(array)
-    if sigma <= 0:
-        print("ERROR SHARPE CALL")
-        return 0
     return mu/sigma
 
 
